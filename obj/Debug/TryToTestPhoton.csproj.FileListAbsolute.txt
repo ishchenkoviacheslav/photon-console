@@ -1,0 +1,10 @@
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\TryToTestPhoton.exe
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\TryToTestPhoton.pdb
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.csprojResolveAssemblyReference.cache
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.csproj.CoreCompileInputs.cache
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.exe
+c:\users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.pdb
+C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\Photon3Unity3D.dll
+C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\Photon3Unity3D.pdb
+C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\Photon3Unity3D.xml
+C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.csproj.CopyComplete

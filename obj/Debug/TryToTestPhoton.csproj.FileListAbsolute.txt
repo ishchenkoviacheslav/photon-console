@@ -8,3 +8,5 @@ C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPho
 C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\Photon3Unity3D.pdb
 C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\Photon3Unity3D.xml
 C:\Users\user\documents\visual studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\obj\Debug\TryToTestPhoton.csproj.CopyComplete
+C:\Users\user\Documents\Visual Studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\TestPhotonLib.Common.dll
+C:\Users\user\Documents\Visual Studio 2017\Projects\TryToTestPhoton\TryToTestPhoton\bin\Debug\TestPhotonLib.Common.pdb

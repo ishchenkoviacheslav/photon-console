@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ExitGames.Client.Photon;
+using TestPhotonLib.Common;
+using TestPhotonLib.Common.CustomEventArgs;
 //using UnityEngine;
 namespace TryToTestPhoton
 {
@@ -12,24 +14,22 @@ namespace TryToTestPhoton
         private const string CONNECTION_STRING = "localhost:5055";
         private const string APP_NAME = "MyTestServer";
 
-        //private static PhotonServer _instance;
-
-        //public static PhotonServer Instance
-        //{
-        //    get { return _instance; }
-        //}
-
+        public static PhotonServer Instance { get; } = new PhotonServer();
         private PhotonPeer PhotonPeer
         {
             get;
             set;
         }
 
+        public event EventHandler<LoginEventArgs> OnLoginResponse;
+        public event EventHandler<ChatMessageEventArgs> OnReceiveChatMessage;
+
         //public void Awake()
         //{
         //    //if (Instance != null)
         //    //{
         //    //    DestroyObject(gameObject);
+        //    //    return;//some problem with singletone....
         //    //}
 
         //    //DontDestroyOnLoad(gameObject);
@@ -74,8 +74,8 @@ namespace TryToTestPhoton
         {
             switch (eventData.Code)
             {
-                case 1:
-                    if (eventData.Parameters.ContainsKey(1))
+                case (byte)EventCode.ChatMessage:
+                    ChatMessageHandler(eventData);
                         //Debug.Log("rect event:" + eventData.Parameters[1]);
                         Console.WriteLine("rect event:" + eventData.Parameters[1]);
 
@@ -91,13 +91,16 @@ namespace TryToTestPhoton
         {
             switch (operationResponse.OperationCode)
             {
-                case 1:
-                    if (operationResponse.Parameters.ContainsKey(1))
-                    {
-                        //Debug.Log("rect:" + operationResponse.Parameters[1]);
-                        Console.WriteLine("rect:" + operationResponse.Parameters[1]);
-                       // SendOperation2();
-                    }
+                case (byte)OperationCode.Login:
+
+                    LoginHandler(operationResponse);
+
+                    //if (operationResponse.Parameters.ContainsKey(1))
+                    //{
+                    //    //Debug.Log("rect:" + operationResponse.Parameters[1]);
+                    //    Console.WriteLine("rect:" + operationResponse.Parameters[1]);
+                    //    SendOperation2();
+                    //}
                     break;
                 default:
                     //Debug.Log("Unknown OperationResponse: " + operationResponse.OperationCode);
@@ -112,38 +115,78 @@ namespace TryToTestPhoton
             switch (statusCode)
             {
                 case StatusCode.Connect:
-                    Debug.Log("Connected to server!");
-                    // SendOperation();
+                    Console.WriteLine("Connected to server!");
                     break;
                 case StatusCode.Disconnect:
-                    Debug.Log("Disconnected from server!");
+                    Console.WriteLine("Disconnected from server!");
                     break;
                 case StatusCode.TimeoutDisconnect:
-                    Debug.Log("TimeoutDisconnected from server!");
+                    Console.WriteLine("TimeoutDisconnected from server!");
                     break;
                 case StatusCode.DisconnectByServer:
-                    Debug.Log("Disconnect By Server from server!");
+                    Console.WriteLine("Disconnect By Server from server!");
                     break;
                 case StatusCode.DisconnectByServerUserLimit:
-                    Debug.Log("DisconnectByServerUserLimit from server!");
+                    Console.WriteLine("DisconnectByServerUserLimit from server!");
                     break;
                 case StatusCode.DisconnectByServerLogic:
-                    Debug.Log("DisconnectByServerLogic from server!");
+                    Console.WriteLine("DisconnectByServerLogic from server!");
                     break;
                 default:
-                    Debug.Log("Unknown status:" + statusCode.ToString());
+                    Console.WriteLine("Unknown status:" + statusCode.ToString());
                     break;
             }
         }
 
-        public void SendOperation()
+        private void LoginHandler(OperationResponse operationResponse)
         {
-            PhotonPeer.OpCustom(1, new Dictionary<byte, object> { { 1, "send message" } }, false);
+            if (operationResponse.ReturnCode != 0)
+            {
+                ErrorCode errorCode = (ErrorCode)operationResponse.ReturnCode;
+                switch (errorCode)
+                {
+                    case ErrorCode.OK:
+                        break;
+                    case ErrorCode.InvalidParameters:
+                        break;
+                    case ErrorCode.NameIsExist:
+                        if (OnLoginResponse != null)
+                            OnLoginResponse(this, new LoginEventArgs(ErrorCode.NameIsExist));
+                        break;
+                    case ErrorCode.RequestNotImplemented:
+                        break;
+                    default:
+                        Console.WriteLine("Error Login returnCode:" + operationResponse.ReturnCode);
+                        break;
+                }
+                return;
+            }
+            if (OnLoginResponse != null)
+                OnLoginResponse(this, new LoginEventArgs(ErrorCode.OK));
         }
 
-        public void SendOperation2()
+        private void ChatMessageHandler(EventData eventData)
         {
-            PhotonPeer.OpCustom(2, new Dictionary<byte, object> { { 1, "send message for event" } }, false);
+            string message = (string)eventData.Parameters[(byte)ParameterCode.CharacterName];
+            if (OnReceiveChatMessage != null)
+                OnReceiveChatMessage(this, new ChatMessageEventArgs(message));
+        }
+
+        public void SendLoginOperation(string name)
+        {
+            PhotonPeer.OpCustom((byte)OperationCode.Login, new Dictionary<byte, object> { { (byte)ParameterCode.CharacterName, name } }, true);
+
+        }
+
+
+        public void SendChatMessage(string message)
+        {
+            PhotonPeer.OpCustom((byte)OperationCode.SendChatMessage, new Dictionary<byte, object> { { (byte)ParameterCode.ChatMessage, message} }, true);
+        }
+
+        public void GetRecentChatMessage()
+        {
+            PhotonPeer.OpCustom((byte)OperationCode.GetRecentChatMessages, null, true);
         }
 
     }
